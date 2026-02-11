@@ -1,0 +1,31 @@
+name: Flask Docker CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Step 1: Checkout GitHub Code
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Step 2: Login to DockerHub
+      - name: Login to DockerHub
+        run: echo "${{ secrets.DOCKER_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_USERNAME }}" --password-stdin
+
+      # Step 3: Build Docker Image
+      - name: Build Docker Image
+        run: docker build -t flask-app .
+
+      # Step 4: Tag Docker Image
+      - name: Tag Docker Image
+        run: docker tag flask-app ${{ secrets.DOCKER_USERNAME }}/flask-app:latest
+
+      # Step 5: Push Image to DockerHub
+      - name: Push Docker Image
+        run: docker push ${{ secrets.DOCKER_USERNAME }}/flask-app:latest
