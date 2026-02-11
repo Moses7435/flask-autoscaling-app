@@ -1,52 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>My YouTube Page</title>
+    <title>YouTube Search Player</title>
 
     <style>
         body {
-            margin: 0;
-            background-color: #111;
-            font-family: Arial, sans-serif;
+            font-family: Arial;
+            background: #111;
             color: white;
-        }
-
-        header {
-            background: #202020;
-            padding: 15px;
-            font-size: 22px;
-            font-weight: bold;
             text-align: center;
         }
 
-        .video-container {
-            display: flex;
-            justify-content: center;
-            margin-top: 30px;
+        h1 {
+            margin-top: 20px;
+        }
+
+        form input {
+            padding: 10px;
+            width: 300px;
+            border-radius: 8px;
+            border: none;
+        }
+
+        form button {
+            padding: 10px 20px;
+            border: none;
+            background: red;
+            color: white;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
         }
 
         iframe {
+            margin-top: 20px;
             width: 80%;
-            height: 500px;
+            height: 450px;
             border-radius: 15px;
             border: none;
-            box-shadow: 0px 0px 20px black;
+        }
+
+        .videos {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        .card {
+            background: #222;
+            width: 220px;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 12px;
+        }
+
+        .card img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+        .card p {
+            font-size: 14px;
         }
     </style>
 </head>
 
 <body>
 
-    <header>
-        🎥 My YouTube Inside Flask Page
-    </header>
+    <h1>🎥 My YouTube Search Player</h1>
 
-    <div class="video-container">
+    <!-- Search Bar -->
+    <form method="POST">
+        <input type="text" name="query" placeholder="Search videos..." required>
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- Video Player -->
+    {% if selected_video %}
         <iframe 
-            src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+            src="https://www.youtube.com/embed/{{ selected_video }}"
             allowfullscreen>
         </iframe>
+    {% endif %}
+
+    <!-- Video Results -->
+    <div class="videos">
+        {% for video in videos %}
+            <div class="card">
+                <img src="{{ video.thumbnail }}">
+                <p>{{ video.title }}</p>
+            </div>
+        {% endfor %}
     </div>
 
 </body>
