@@ -14,3 +14,23 @@ Thumbs.db
 
 #Environment variables and secrets
 .env
+
+# Terraform files
+secrets.tfvars
+# Terraform folder
+.terraform/
+
+# Terraform state files
+*.tfstate
+*.tfstate.backup
+
+# Terraform lock file (optional safe)
+.terraform.lock.hcl
+
+# Variable secrets
+terraform.tfvars
+
+# SSH Keys
+*.pem
+*.pub
+

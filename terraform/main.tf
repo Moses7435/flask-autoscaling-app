@@ -10,8 +10,6 @@ terraform {
 # Configure the AWS Provider
 provider "aws" {
   region = "ap-southeast-2"
-  access_key = "var.aws_access_key"
-  secret_key = "var.aws_secret_key"
 }
 
 // Security Group
@@ -58,22 +56,29 @@ resource "aws_launch_template" "flask_lt" {
   # ✅ User Data Script
   user_data = base64encode(<<EOF
 #!/bin/bash
-yum update -y
+sudo yum update -y
 
-# Install Docker on Amazon Linux 2023
-yum install docker -y
+# Install Docker
+sudo yum install -y docker
 
-# Start Docker service
-systemctl enable docker
-systemctl start docker
+# Enable + Start Docker
+sudo systemctl enable docker
+sudo systemctl start docker
 
-# Add ec2-user to docker group
-usermod -aG docker ec2-user
+# Wait for Docker daemon to be ready
+sudo sleep 15
 
-# Run Flask container
-docker run -d -p 80:5000 moses7435/flask-app:latest
+# Pull image first (important)
+sudo docker pull moses7435/flask-app:latest
+
+# Run container with restart policy
+sudo docker run -d \
+  --name flask-app \
+  --restart always \
+  -p 80:5000 \
+  moses7435/flask-app:latest
 EOF
-  )
+)
 }
 
 

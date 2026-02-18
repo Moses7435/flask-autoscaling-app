@@ -17,6 +17,9 @@ if not API_KEY:
 # YouTube API client
 youtube = build("youtube", "v3", developerKey=API_KEY)
 
+@app.route("/health")
+def health():
+    return "OK", 200
 
 @app.route("/", methods=["GET", "POST"])
 def home():
