@@ -91,7 +91,7 @@ Terraform provisions:
 * Grace period for instance boot
 * Docker container auto-restart
 * Rolling instance refresh supported
-
+```
 ## 🚀 Deployment Instructions
 
 ### 1️⃣ Clone the repository
@@ -205,8 +205,6 @@ Entry-Level IT & Cloud Engineer
 
 ```
 
----
-
 # 🔥 Why This README Is Strong
 
 It:
@@ -216,8 +214,6 @@ It:
 - Highlights skills recruiters want
 - Looks professional
 - Makes your project portfolio-ready
-
----
 
 If you want, I can also create:
 
