@@ -10,8 +10,6 @@ COPY requirements.txt .
 # Step 4: Install dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-RUN pip install --no-cache-dir google-api-python-client
-
 # Step 5: Copy application code
 COPY . .
 
