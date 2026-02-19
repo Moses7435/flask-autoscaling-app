@@ -12,8 +12,6 @@ This project demonstrates how to deploy a containerized Flask application on AWS
 
 The system automatically scales and load-balances traffic across EC2 instances running a Dockerized Flask app.
 
----
-
 ## 🏗️ Architecture Overview
 
 GitHub → GitHub Actions → DockerHub → AWS Auto Scaling Group → EC2 Instances → ALB → Users
@@ -27,11 +25,7 @@ GitHub → GitHub Actions → DockerHub → AWS Auto Scaling Group → EC2 Insta
 5. ALB distributes traffic
 6. Auto Scaling handles instance scaling
 
----
-
 ## 📁 Project Structure
-
-```
 
 flask-autoscaling-app/
 │
@@ -51,7 +45,6 @@ flask-autoscaling-app/
 │
 └── README.md
 
-````
 ## 🐳 Flask Application
 
 ### Endpoints
@@ -66,7 +59,6 @@ Example response:
   "message": "Flask App Running Successfully!",
   "hostname": "ip-172-31-xx-xx"
 }
-````
 
 ## ⚙️ CI/CD Pipeline (GitHub Actions)
 
