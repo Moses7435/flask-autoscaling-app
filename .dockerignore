@@ -4,3 +4,40 @@ __pycache__/
 .git/
 .github/
 .env
+terraform/
+# Virtual Environment
+venv/
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# VS Code settings
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+#Environment variables and secrets
+.env
+
+# Terraform files
+secrets.tfvars
+# Terraform folder
+.terraform/
+
+# Terraform state files
+*.tfstate
+*.tfstate.backup
+
+# Terraform lock file (optional safe)
+.terraform.lock.hcl
+
+# Variable secrets
+terraform.tfvars
+
+# SSH Keys
+*.pem
+*.pub
+

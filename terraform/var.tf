@@ -13,3 +13,7 @@ variable "instance_type" {
 
 variable "aws_access_key" {}
 variable "aws_secret_key" {}
+
+locals {
+  my_ip = "${chomp(data.http.myip.response_body)}/32"
+}

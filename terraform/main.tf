@@ -4,7 +4,16 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 6.0"
     }
+
+    http = {
+      source  = "hashicorp/http"
+      version = "~> 3.0"
+    }
   }
+}
+
+data "http" "myip" {
+  url = "https://checkip.amazonaws.com/"
 }
 
 # Configure the AWS Provider
@@ -12,24 +21,25 @@ provider "aws" {
   region = "ap-southeast-2"
 }
 
-// Security Group
+// Security group For instance
 
-resource "aws_security_group" "flask_sg" {
-  name        = "flask-sg"
-  description = "Allow HTTP traffic"
+resource "aws_security_group" "instance_sg" {
+  name        = "instance-sg"
+  description = "Allow HTTP only from ALB"
+  vpc_id      = data.aws_vpc.default.id
 
   ingress {
-    from_port   = 80
-    to_port     = 80
-    protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    from_port       = 80
+    to_port         = 80
+    protocol        = "tcp"
+    security_groups = [aws_security_group.alb_sg.id]
   }
 
   ingress {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # For testing only
+    cidr_blocks = [local.my_ip]
   }
 
   egress {
@@ -51,7 +61,7 @@ resource "aws_launch_template" "flask_lt" {
   key_name = "flask"
 
   # ✅ Security Group
-  vpc_security_group_ids = [aws_security_group.flask_sg.id]
+  vpc_security_group_ids = [aws_security_group.instance_sg.id]
 
   # ✅ User Data Script
   user_data = base64encode(<<EOF
@@ -107,13 +117,35 @@ resource "aws_lb_target_group" "flask_tg" {
   }
 }
 
+// Security Group for ALB
+
+resource "aws_security_group" "alb_sg" {
+  name        = "alb-sg"
+  description = "Allow HTTP from Internet"
+  vpc_id      = data.aws_vpc.default.id
+
+  ingress {
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
 // Load Balancer 
 
 resource "aws_lb" "flask_alb" {
   name               = "flask-alb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.flask_sg.id]
+  security_groups = [aws_security_group.alb_sg.id]
   subnets            = data.aws_subnets.default.ids
 }
 
@@ -136,6 +168,9 @@ resource "aws_autoscaling_group" "flask_asg" {
   desired_capacity = 2
   max_size         = 5
   min_size         = 2
+
+  health_check_grace_period = 180
+  health_check_type         = "ELB"
 
   vpc_zone_identifier = data.aws_subnets.default.ids
 
