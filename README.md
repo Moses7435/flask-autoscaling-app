@@ -70,9 +70,7 @@ On every push to `main` branch:
 
 Workflow file:
 
-```
 .github/workflows/docker-build.yml
-```
 
 ## ☁️ Infrastructure (Terraform)
 
